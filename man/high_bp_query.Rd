@@ -4,10 +4,14 @@
 \alias{high_bp_query}
 \title{High Blood Pressure Query}
 \usage{
-high_bp_query(page_size = NULL)
+high_bp_query(anchor_date_table = NULL, before = NULL, after = NULL)
 }
 \arguments{
-\item{page_size}{The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).}
+\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
+
+\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
+
+\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
 A data.table with the following columns:
@@ -20,4 +24,6 @@ Provides the first date where BP was >=140/>=90
 \dontrun{
 high_bp_dat <- high_bp_query()
 }
+
+#' @export
 }

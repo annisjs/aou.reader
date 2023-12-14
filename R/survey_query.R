@@ -1,6 +1,10 @@
 #' Survey query
+#' 
 #' @param survey_codes a character vector or string of survey codes
-#' @param page_size The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
+#' 
 #' @return 
 #' a data.table with the following columns:
 #' person_id, survey_response, survey_date
@@ -8,10 +12,13 @@
 #' \dontrun{
 #' survey_dat <- survey_query("1585860")
 #' }
-survey_query <- function(survey_codes,page_size=NULL)
+#' @export
+survey_query <- function(survey_codes,anchor_date_table=NULL,before=NULL,after=NULL)
 {
+  dataset <- Sys.getenv("WORKSPACE_CDR")
+  dest <- "survey_query.csv"
   survey_codes <- paste0(survey_codes,collapse=",")
-  query <- str_glue("
+  query <- stringr::str_glue("
         SELECT
             survey.person_id,
             survey.answer AS survey_response,
@@ -24,5 +31,7 @@ survey_query <- function(survey_codes,page_size=NULL)
                           {survey_codes}
                 )
             )")
-  download_data(query,page_size)
+    result_all <- download_big_data(query,dest)
+    result_all <- window_data(result_all,"survey_date",anchor_date_table,before,after)
+    return(result_all)
 }

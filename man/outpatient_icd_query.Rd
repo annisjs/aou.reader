@@ -4,12 +4,21 @@
 \alias{outpatient_icd_query}
 \title{Outpatient ICD query}
 \usage{
-outpatient_icd_query(codes, page_size = NULL)
+outpatient_icd_query(
+  codes,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL
+)
 }
 \arguments{
 \item{codes}{a character vector or string of ICD9/10 codes}
 
-\item{page_size}{The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).}
+\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
+
+\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
+
+\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
 a data.table with the following columns:

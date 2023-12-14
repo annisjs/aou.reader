@@ -1,6 +1,8 @@
 #' High Blood Pressure Query
 #'
-#' @param page_size The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #'
 #' @return
 #' A data.table with the following columns:
@@ -9,16 +11,17 @@
 #' @description
 #' Provides the first date where BP was >=140/>=90
 #' 
-#' @export
-#'
 #' @examples
 #' \dontrun{
 #' high_bp_dat <- high_bp_query()
 #' }
-high_bp_query <- function(page_size=NULL)
+#' 
+#' #' @export
+high_bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
   dataset <- Sys.getenv("WORKSPACE_CDR")
-  bp_query <- str_glue("
+  dest <- "high_bp_query.csv"
+  query <- stringr::str_glue("
     WITH diatb AS (SELECT
         person_id, measurement_datetime, value_as_number AS dia
         FROM `{dataset}.measurement` m
@@ -40,6 +43,7 @@ high_bp_query <- function(page_size=NULL)
     AND dia >= 90
     GROUP BY d.person_id
     ")
-  result <- download_data(bp_query,page_size)
-  return(result)
+  result_all <- download_big_data(query,dest)
+  result_all <- window_data(result_all,"measurement_date",anchor_date_table,before,after)
+  return(result_all)
 }

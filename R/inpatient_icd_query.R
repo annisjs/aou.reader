@@ -1,6 +1,9 @@
 #' Inpatient ICD query
+#' 
 #' @param codes a character vector or string of ICD9/10 codes
-#' @param page_size The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).
+#' @param anchor_date_table a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.
+#' @param before an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.
+#' @param after an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.
 #' 
 #' @return 
 #' a data.table with the following columns:
@@ -15,16 +18,17 @@
 #'    Is an inpatient visit. Captured by the visit_concept_id in the visit_occurrence table
 #' )
 #' 
-#' @export 
 #' @examples
 #' \dontrun{
 #' inpatient_dat <- inpatient_icd_query(c("I21","I21.%"))
 #' }
-inpatient_icd_query <- function(codes,page_size=NULL)
+#' @export 
+inpatient_icd_query <- function(codes,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   dataset <- Sys.getenv("WORKSPACE_CDR")
+  dest <- "inpatient_icd_query_result.csv"
   code_clause <- paste('co.CONDITION_SOURCE_VALUE LIKE ',"'",codes,"'",collapse=' OR ',sep="")
-  query <- str_glue(
+  query <- stringr::str_glue(
     "SELECT co.person_id,co.condition_start_date,co.condition_source_value
         FROM
             `{dataset}.condition_occurrence` co
@@ -43,5 +47,7 @@ inpatient_icd_query <- function(codes,page_size=NULL)
             38000211,38000212,38000213) OR
             v.visit_concept_id = 9201)
         ")
-  download_data(query,page_size)
+  result_all <- download_big_data(query,dest)
+  result_all <- window_data(result_all,"condition_start_date",anchor_date_table,before,after)
+  return(result_all)
 }
