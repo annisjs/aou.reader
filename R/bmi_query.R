@@ -15,7 +15,6 @@
 #' @export
 bmi_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    dataset <- Sys.getenv("WORKSPACE_CDR")
     dest <- "bmi_query_result.csv"
     bmi_query <- stringr::str_glue("
         SELECT
@@ -26,20 +25,20 @@ bmi_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
             ( SELECT
                 *
             FROM
-                `{dataset}.measurement` measurement
+                `measurement` measurement
             WHERE
                 (
                     measurement_concept_id IN  (
                         SELECT
                             DISTINCT c.concept_id
                         FROM
-                            `{dataset}.cb_criteria` c
+                            `cb_criteria` c
                         JOIN
                             (
                                 select
                                     cast(cr.id as string) as id
                                 FROM
-                                    `{dataset}.cb_criteria` cr
+                                    `cb_criteria` cr
                                 WHERE
                                     concept_id IN (
                                         3038553

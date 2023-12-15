@@ -16,14 +16,13 @@
 #' @export
 cpt_query <- function(cpt_codes,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "cpt_query_result.csv"
   cpt_terms <- paste('c.CONCEPT_CODE LIKE ',"'",cpt_codes,"'",collapse=' OR ',sep="")
   query <- stringr::str_glue("
     SELECT DISTINCT p.person_id,c.CONCEPT_CODE AS cpt_code,p.PROCEDURE_DATE AS entry_date
     FROM
-        {dataset}.concept c,
-        {dataset}.procedure_occurrence p
+        concept c,
+        procedure_occurrence p
         WHERE
         c.VOCABULARY_ID like 'CPT4' AND
         c.CONCEPT_ID = p.PROCEDURE_SOURCE_CONCEPT_ID AND

@@ -14,22 +14,38 @@
 #' icd9_dat <- icd9_codes(c("410","410.%"))
 #' }
 #' @export
-icd9_query <- function(icd9_codes,anchor_date_table=NULL,before=NULL,after=NULL)
+icd9_query <- function(icd9_codes=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "icd9_query_result.csv"
   icd9_terms <- paste('co.CONDITION_SOURCE_VALUE LIKE ',"'",icd9_codes,"'",collapse=' OR ',sep="")
-  query <- stringr::str_glue("
-    SELECT DISTINCT co.person_id, co.condition_start_date,co.condition_source_value
+  if (!is.null(icd9_codes))
+  {
+    query <- stringr::str_glue("
+      SELECT DISTINCT co.person_id, co.condition_start_date,co.condition_source_value
+      FROM
+          condition_occurrence co
+          INNER JOIN
+          concept c
+          ON (co.condition_source_concept_id = c.concept_id)
+      WHERE
+          c.VOCABULARY_ID LIKE 'ICD9CM' AND
+          ({icd9_terms})
+      ")
+  } else {
+    query <- stringr::str_glue("
+       SELECT DISTINCT co.person_id,
+        MIN(co.condition_start_date) AS condition_start_date,
+        co.condition_source_value AS condition_source_value
     FROM
-        {dataset}.condition_occurrence co
+        condition_occurrence co
         INNER JOIN
-        {dataset}.concept c
+        concept c
         ON (co.condition_source_concept_id = c.concept_id)
     WHERE
-        c.VOCABULARY_ID LIKE 'ICD9CM' AND
-        ({icd9_terms})
-    ")
+        c.VOCABULARY_ID LIKE 'ICD9CM'
+    GROUP BY person_id, condition_source_value
+  ")
+  }
   result_all <- download_big_data(query,dest)
   result_all <- window_data(result_all,"condition_start_date",anchor_date_table,before,after)
   return(result_all)

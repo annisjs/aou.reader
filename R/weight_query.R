@@ -15,7 +15,6 @@
 #' @export
 weight_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "weight_query_result.csv"
   query <- stringr::str_glue("
         SELECT
@@ -27,20 +26,20 @@ weight_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
             ( SELECT
                 *
             FROM
-                `{dataset}.measurement` measurement
+                `measurement` measurement
             WHERE
                 (
                     measurement_concept_id IN  (
                         SELECT
                             DISTINCT c.concept_id
                         FROM
-                            `{dataset}.cb_criteria` c
+                            `cb_criteria` c
                         JOIN
                             (
                                 select
                                     cast(cr.id as string) as id
                                 FROM
-                                    `{dataset}.cb_criteria` cr
+                                    `cb_criteria` cr
                                 WHERE
                                     concept_id IN (
                                         3025315, 3013762
@@ -63,7 +62,7 @@ weight_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                     )
                 ) measurement
                 LEFT JOIN
-                `{dataset}.concept` m_unit
+                `concept` m_unit
                     ON measurement.unit_concept_id = m_unit.concept_id")
     result_all <- download_big_data(query,dest)
     result_all <- window_data(result_all,"survey_date",anchor_date_table,before,after)

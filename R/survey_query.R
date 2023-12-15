@@ -15,7 +15,6 @@
 #' @export
 survey_query <- function(survey_codes,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "survey_query.csv"
   survey_codes <- paste0(survey_codes,collapse=",")
   query <- stringr::str_glue("
@@ -24,7 +23,7 @@ survey_query <- function(survey_codes,anchor_date_table=NULL,before=NULL,after=N
             survey.answer AS survey_response,
             CAST(survey.survey_datetime AS DATE) AS survey_date
         FROM
-            `{dataset}.ds_survey` survey
+            `ds_survey` survey
         WHERE
             (
                 question_concept_id IN (

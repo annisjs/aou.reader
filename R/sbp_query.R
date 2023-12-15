@@ -14,7 +14,6 @@
 #' @export
 sbp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    dataset <- Sys.getenv("WORKSPACE_CDR")
     dest <- "sbp_query_result.csv"
     query <- stringr::str_glue("
     `SELECT
@@ -25,20 +24,20 @@ sbp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
         ( SELECT
             *
         FROM
-            `{dataset}.measurement` measurement
+            `measurement` measurement
         WHERE
             (
                 measurement_concept_id IN  (
                     SELECT
                         DISTINCT c.concept_id
                     FROM
-                        `{dataset}.cb_criteria` c
+                        `cb_criteria` c
                     JOIN
                         (
                             select
                                 cast(cr.id as string) as id
                             FROM
-                                `{dataset}.cb_criteria` cr
+                                `cb_criteria` cr
                             WHERE
                                 concept_id IN (
                                     4152194, 3018586, 3004249

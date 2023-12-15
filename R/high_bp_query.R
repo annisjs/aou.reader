@@ -19,17 +19,16 @@
 #' #' @export
 high_bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "high_bp_query.csv"
   query <- stringr::str_glue("
     WITH diatb AS (SELECT
         person_id, measurement_datetime, value_as_number AS dia
-        FROM `{dataset}.measurement` m
+        FROM `measurement` m
     WHERE
         m.measurement_source_value IN ('8462-4','271650006','8453-3')),
     systb AS (SELECT
         person_id, measurement_datetime, value_as_number AS sys
-        FROM `{dataset}.measurement` m
+        FROM `measurement` m
     WHERE
         m.measurement_source_value IN ('8480-6','271649006','8459-0'))
     SELECT d.person_id, MIN(CAST(d.measurement_datetime AS DATE)) AS measurement_date

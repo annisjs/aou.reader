@@ -15,15 +15,14 @@
 #' @export
 med_query <- function(meds,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "med_query_result.csv"
   med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
   query <- stringr::str_glue("
        SELECT DISTINCT d.person_id,d.drug_exposure_start_date
         FROM
-        {dataset}.drug_exposure d
+        drug_exposure d
         INNER JOIN
-        {dataset}.concept c
+        concept c
         ON (d.drug_concept_id = c.concept_id)
         WHERE
         {med_terms}

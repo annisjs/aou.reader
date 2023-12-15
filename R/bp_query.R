@@ -15,17 +15,16 @@
 #' @export
 bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "bp_query_result.csv"
   query <- stringr::str_glue("
         WITH diatb AS (SELECT
             person_id, measurement_datetime, value_as_number AS bp_diastolic
-            FROM `{dataset}.measurement` m
+            FROM measurement m
         WHERE
             m.measurement_source_value IN ('8462-4','8453-3', '271650006')),
         systb AS (SELECT
             person_id, measurement_datetime, value_as_number AS bp_systolic
-            FROM `{dataset}.measurement` m
+            FROM measurement m
         WHERE
             m.measurement_source_value IN ('8480-6','8459-0', '271649006'))
         SELECT d.person_id,

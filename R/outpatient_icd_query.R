@@ -25,18 +25,17 @@
 #' @export 
 outpatient_icd_query <- function(codes,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "outpatient_icd_query_result.csv"
   code_clause <- paste('co.CONDITION_SOURCE_VALUE LIKE ',"'",codes,"'",collapse=' OR ',sep="")
   query <- stringr::str_glue(
     "SELECT co.person_id,co.condition_start_date,co.condition_source_value
         FROM
-            `{dataset}.condition_occurrence` co
+            `condition_occurrence` co
             LEFT JOIN
-            `{dataset}.concept` c
+            `concept` c
             ON (co.condition_source_concept_id = c.concept_id)
             LEFT JOIN
-            `{dataset}.visit_occurrence` v
+            `visit_occurrence` v
             ON (co.visit_occurrence_id = v.visit_occurrence_id)
         WHERE
             c.vocabulary_id LIKE 'ICD%' AND

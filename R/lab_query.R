@@ -16,13 +16,12 @@
 #' @export 
 lab_query <- function(labs,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dataset <- Sys.getenv("WORKSPACE_CDR")
   dest <- "lab_query_result.csv"
   lab_terms <- paste('c.concept_name LIKE ',"'",labs,"'",collapse=' OR ',sep="")
   query <- stringr::str_glue("
         SELECT person_id, measurement_date, value_as_number
-        FROM `{dataset}.measurement` m
-        INNER JOIN `{dataset}.concept` c ON (m.measurement_concept_id = c.concept_id)
+        FROM `measurement` m
+        INNER JOIN `concept` c ON (m.measurement_concept_id = c.concept_id)
         WHERE
         ({lab_terms})
         ")
