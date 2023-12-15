@@ -4,12 +4,16 @@
 \alias{icd9_query}
 \title{ICD9 Query}
 \usage{
-icd9_query(icd9_codes, page_size = NULL)
+icd9_query(icd9_codes, anchor_date_table = NULL, before = NULL, after = NULL)
 }
 \arguments{
 \item{icd9_codes}{a character vector or character string containing ICD9 codes. String can contain wildcards using \% (e.g. "410.\%").}
 
-\item{page_size}{The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).}
+\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
+
+\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
+
+\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
 a data.table with the following columns:

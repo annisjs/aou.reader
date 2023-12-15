@@ -4,12 +4,16 @@
 \alias{icd10_query}
 \title{ICD10 Query}
 \usage{
-icd10_query(dataset, icd10_codes, page_size = NULL)
+icd10_query(icd10_codes, anchor_date_table = NULL, before = NULL, after = NULL)
 }
 \arguments{
-\item{page_size}{The number of rows requested per chunk. It is recommended to leave this unspecified (see bq_table_download {bigrquery}).}
+\item{icd10_codes}{a character vector or character string containing ICD10 codes. String can contain wildcards using \% (e.g. "410.\%").}
 
-\item{icd9_codes}{a character vector or character string containing ICD10 codes. String can contain wildcards using \% (e.g. "410.\%").}
+\item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
+
+\item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
+
+\item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
 }
 \value{
 a data.table with the following columns:
