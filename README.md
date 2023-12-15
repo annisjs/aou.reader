@@ -5,7 +5,7 @@ aou.reader contains functions for common data pulls in the All of Us Researcher 
 # Installation
 In an R notebook on the AOU workbench:
 ```r
-devtools::install_github("annisjs/aou.reader,upgrade=F)
+devtools::install_github("annisjs/aou.reader",upgrade=F)
 ```
 
 # Example
