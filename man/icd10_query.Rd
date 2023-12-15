@@ -4,7 +4,12 @@
 \alias{icd10_query}
 \title{ICD10 Query}
 \usage{
-icd10_query(icd10_codes, anchor_date_table = NULL, before = NULL, after = NULL)
+icd10_query(
+  icd10_codes = NULL,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL
+)
 }
 \arguments{
 \item{icd10_codes}{a character vector or character string containing ICD10 codes. String can contain wildcards using \% (e.g. "410.\%").}
