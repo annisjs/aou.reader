@@ -11,6 +11,9 @@ Roxygen: list(markdown = TRUE)
 Imports:
   bigrquery,
   stringr,
-  data.table
+  data.table,
+  aou.bucket
+Remotes:
+  annisjs/aou.bucket
 LazyData: true
 RoxygenNote: 7.2.3
