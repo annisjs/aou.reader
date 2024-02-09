@@ -16,7 +16,7 @@
 bmi_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
     dest <- "bmi_query_result.csv"
-    bmi_query <- stringr::str_glue("
+    query <- stringr::str_glue("
         SELECT
             measurement.person_id,
             measurement.measurement_date AS measurement_date,
