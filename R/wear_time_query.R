@@ -18,7 +18,7 @@
 wear_time_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
     dest <- "wear_time_query.csv"
-    query <- str_glue("
+    query <- stringr::str_glue("
             SELECT person_id, date, SUM(has_hour) AS wear_time
             FROM (SELECT person_id, CAST(datetime AS DATE) AS date, IF(SUM(steps)>0, 1, 0) AS has_hour
                     FROM `steps_intraday`
