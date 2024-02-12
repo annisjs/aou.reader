@@ -16,7 +16,7 @@
 #' high_bp_dat <- high_bp_query()
 #' }
 #' 
-#' #' @export
+#' @export
 high_bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
   dest <- "high_bp_query.csv"

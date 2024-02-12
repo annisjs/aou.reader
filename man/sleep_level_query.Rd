@@ -15,6 +15,8 @@ sleep_level_query(
 \arguments{
 \item{sleep_terms}{a SQL WHERE statement for filtering sleep levels. If no statement is provided, then no filtering is performed.}
 
+\item{time}{which time should be pulled? Can be \code{first}, \code{last}, or \code{all}. Note, \code{all} will return all sleep levels, which can be quite large. Default is \code{first}.}
+
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
 
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}

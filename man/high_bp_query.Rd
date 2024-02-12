@@ -25,5 +25,4 @@ Provides the first date where BP was >=140/>=90
 high_bp_dat <- high_bp_query()
 }
 
-#' @export
 }
