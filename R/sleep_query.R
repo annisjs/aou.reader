@@ -18,7 +18,7 @@
 #' @export
 sleep_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-	dest <- "sleep_query_result"
+	dest <- "sleep_query_result.csv"
 	query <- paste("
 			SELECT
 			sleep_daily_summary.person_id
