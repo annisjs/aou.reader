@@ -25,10 +25,10 @@ bout_cadence_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 			SELECT person_id,
 				CAST(datetime AS DATE) as bout_cadence_date,
 				AVG(steps) as bout_cadence_value
-			FROM (SELECT `{dataset}.steps_intraday`.*,
+			FROM (SELECT steps_intraday.*,
 						lag (datetime) over (partition by person_id, CAST(datetime AS DATE) order by datetime) as nextTimestamp_lag,
 						lead (datetime) over (partition by person_id, CAST(datetime AS DATE) order by datetime) as nextTimestamp_lead
-				from `{dataset}.steps_intraday`
+				from steps_intraday
 				where steps >= 60
 				) t
 			WHERE

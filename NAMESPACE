@@ -3,6 +3,7 @@
 export(bmi_query)
 export(bout_cadence_query)
 export(bp_query)
+export(cadence_pattern_query)
 export(cpt_query)
 export(death_query)
 export(demographics_query)
