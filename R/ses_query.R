@@ -22,6 +22,7 @@ ses_query <- function(anchor_date_table,before,after)
         SELECT
             observation.person_id,
             observation.observation_datetime,
+            cast(observation.observation_datetime AS DATE) AS date,
             zip_code.zip3_as_string as zip_code,
             zip_code.fraction_assisted_income as assisted_income,
             zip_code.fraction_high_school_edu as high_school_education,
@@ -44,6 +45,6 @@ ses_query <- function(anchor_date_table,before,after)
             AND observation.value_as_string NOT LIKE 'Res%'
         LEFT JOIN person p ON (observation.person_id = p.person_id)")
     result_all <- download_big_data(query,dest)
-    result_all <- window_data(result_all,"measurement_date",anchor_date_table,before,after)
+    result_all <- window_data(result_all,"date",anchor_date_table,before,after)
     return(result_all)
 }

@@ -65,6 +65,6 @@ weight_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                 `concept` m_unit
                     ON measurement.unit_concept_id = m_unit.concept_id")
     result_all <- download_big_data(query,dest)
-    result_all <- window_data(result_all,"survey_date",anchor_date_table,before,after)
+    result_all <- window_data(result_all,"measurement_date",anchor_date_table,before,after)
     return(result_all)
 }
