@@ -24,7 +24,7 @@ hospitalization_query <- function(codes=NULL,anchor_date_table=NULL,before=NULL,
                     co.condition_source_value AS hospitalization_icd_code
             FROM
                 `condition_occurrence` co
-                LEFT JOIN `{dataset}`.concept c ON (co.condition_source_concept_id = c.concept_id)
+                LEFT JOIN concept c ON (co.condition_source_concept_id = c.concept_id)
                 LEFT JOIN `visit_occurrence` vo ON (co.visit_occurrence_id = vo.visit_occurrence_id)
             WHERE
                 c.VOCABULARY_ID LIKE 'ICD%' AND
