@@ -31,7 +31,7 @@ hospitalization_query <- function(codes=NULL,anchor_date_table=NULL,before=NULL,
                 (
                     (vo.visit_concept_id = 9201 OR vo.visit_concept_id = 9203) 
                     AND
-                    (co.condition_type_concept_id = 38000200)
+                    (co.condition_type_concept_id = 38000200 OR co.condition_status_concept_id = 4230359)
                 ) AND
                 ({code_terms})
     ")
@@ -53,7 +53,7 @@ hospitalization_query <- function(codes=NULL,anchor_date_table=NULL,before=NULL,
                 (
                     (vo.visit_concept_id = 9201 OR vo.visit_concept_id = 9203) 
                     AND
-                    (co.condition_type_concept_id = 38000200)
+                    (co.condition_type_concept_id = 38000200 OR co.condition_status_concept_id = 4230359)
                 ) 
         ")
     }
