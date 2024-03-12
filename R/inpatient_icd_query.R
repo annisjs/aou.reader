@@ -44,7 +44,7 @@ inpatient_icd_query <- function(codes,anchor_date_table=NULL,before=NULL,after=N
             38000202,38000203,38000204,38000205,38000214,
             38000206,38000207,38000208,38000209,38000210,
             38000211,38000212,38000213) OR
-            v.visit_concept_id = 9201)
+            v.visit_concept_id IN (9201,9203))
         ")
   result_all <- download_big_data(query,dest)
   result_all <- window_data(result_all,"condition_start_date",anchor_date_table,before,after)
