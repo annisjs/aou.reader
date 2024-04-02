@@ -21,7 +21,7 @@ wear_time_hr_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
     query <- stringr::str_glue("
                 SELECT person_id, CAST(datetime AS DATE) AS date, COUNT(*) AS wear_time_hr
                 FROM heart_rate_minute_level
-                WHERE heart_rate_value > 0 AND
+                WHERE heart_rate_value > 0
                 GROUP BY person_id, date
     ")
     result_all <- download_big_data(query,dest)
