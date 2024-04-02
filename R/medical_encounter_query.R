@@ -55,6 +55,12 @@ medical_encounter_query <- function(time="first",anchor_date_table=NULL,before=N
     LEFT JOIN `visit_occurrence_ext` AS mm on m.visit_occurrence_id = mm.visit_occurrence_id
     WHERE LOWER(mm.src_id) LIKE 'ehr site%'
     GROUP BY person_id
+
+    UNION DISTINCT
+
+    SELECT person_id, {ordering}(m.drug_exposure_start_date) AS date
+    FROM `drug_exposure` AS m
+    GROUP BY person_id
     )
 
     SELECT person_id, {ordering}(date) as medical_encounter_entry_date
