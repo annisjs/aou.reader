@@ -16,7 +16,7 @@ dbp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
   dest <- "dbp_query_result.csv"
   query <- stringr::str_glue("
-    `SELECT
+    SELECT
         measurement.person_id,
         EXTRACT(DATE FROM measurement.measurement_datetime) as measurement_date,
         measurement.value_as_number
