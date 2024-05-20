@@ -47,6 +47,7 @@ snomed_query <- function(snomed_codes=NULL,anchor_date_table=NULL,before=NULL,af
   ")
   }
   result_all <- download_big_data(query,dest)
+  result_all$condition_source_value <- as.character(result_all$condition_source_value)
   result_all <- window_data(result_all,"condition_start_date",anchor_date_table,before,after)
   return(result_all)
 }
