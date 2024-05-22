@@ -5,7 +5,7 @@
 \title{Inpatient ICD query}
 \usage{
 inpatient_icd_query(
-  codes,
+  codes = NULL,
   anchor_date_table = NULL,
   before = NULL,
   after = NULL
