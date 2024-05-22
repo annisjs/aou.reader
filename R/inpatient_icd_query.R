@@ -21,6 +21,7 @@
 #' @examples
 #' \dontrun{
 #' inpatient_dat <- inpatient_icd_query(c("I21","I21.%"))
+#' all_inpatient_datt <- inpatient_icd_quer() # if no codes given, all will be returned.
 #' }
 #' @export 
 inpatient_icd_query <- function(codes=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
