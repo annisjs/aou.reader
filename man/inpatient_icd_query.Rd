@@ -39,5 +39,6 @@ Is an inpatient visit. Captured by the visit_concept_id in the visit_occurrence 
 \examples{
 \dontrun{
 inpatient_dat <- inpatient_icd_query(c("I21","I21.\%"))
+all_inpatient_dat <- inpatient_icd_query() # If no codes given, all will be returned.
 }
 }
