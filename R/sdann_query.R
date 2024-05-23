@@ -35,7 +35,7 @@ sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                         datetime,
                         heart_rate_value,
                         FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 5) AS minute_interval
-                FROM {dataset}.heart_rate_minute_level
+                FROM heart_rate_minute_level
             )
             GROUP BY person_id, sdann_date, minute_interval
             HAVING valid_interval = 1
