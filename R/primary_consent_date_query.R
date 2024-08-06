@@ -16,7 +16,7 @@
 #' @export
 primary_consent_date_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    dest <- "death_cause_query_result.csv"
+    dest <- "primary_consent_date_query_result.csv"
     query = str_glue("
         SELECT DISTINCT
             person_id,
