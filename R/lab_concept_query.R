@@ -13,10 +13,10 @@
 #' 
 #' @examples
 #' \dontrun{
-#' lab_dat <- lab_concept_query(c(586520,586523,586525))
+#' lab_concept_dat <- lab_concept_query(c(586520,586523,586525))
 #' }
 #' @export 
-lab_concept_query <- function(labs,value_as_number=NULL, value_as_concept_id, anchor_date_table=NULL,before=NULL,after=NULL)
+lab_concept_query <- function(lab_concepts, value_as_number=NULL, value_as_concept_id=NULL, anchor_date_table=NULL,before=NULL,after=NULL)
 {
   if(!is.null(value_as_number) & !is.null(value_as_concept_id)){
     stop("Only value as a number or value as a concept id can be set for subsetting.")
