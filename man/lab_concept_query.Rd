@@ -6,18 +6,12 @@
 \usage{
 lab_concept_query(
   lab_concepts,
-  value_as_number = NULL,
-  value_as_concept_id = NULL,
   anchor_date_table = NULL,
   before = NULL,
   after = NULL
 )
 }
 \arguments{
-\item{value_as_number}{a numeric vector to subset labs by values as number}
-
-\item{value_as_concept_id}{a numeric vector to subset labs by values as concept ids}
-
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
 
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
