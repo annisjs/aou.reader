@@ -26,7 +26,7 @@ top_steps_query <- function(top_number,anchor_date_table=NULL,before=NULL,after=
     {
         query <- stringr::str_glue("
                 SELECT person_id, CAST(datetime AS DATE) AS top1_steps_date, MAX(steps) AS top1_steps_value
-                FROM `{dataset}.steps_intraday`
+                FROM `steps_intraday`
                 GROUP BY
                 CAST(datetime AS DATE),person_id
             ")
@@ -35,7 +35,7 @@ top_steps_query <- function(top_number,anchor_date_table=NULL,before=NULL,after=
             WITH cte AS (
             SELECT  *,
                     ROW_NUMBER() OVER (PARTITION BY person_id, CAST(datetime AS DATE) ORDER BY steps DESC) as rn
-            FROM `{dataset}.steps_intraday`
+            FROM `steps_intraday`
             )
             SELECT person_id, CAST(datetime AS DATE) AS top{top_number}_steps_date, AVG(steps) AS top{top_number}_steps_value
             FROM cte
