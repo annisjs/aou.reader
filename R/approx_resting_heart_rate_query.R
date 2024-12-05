@@ -28,7 +28,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     IF(COUNT(*)=10,1,0) AS valid_interval,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM {dataset}.steps_intraday
+                FROM steps_intraday
                 WHERE steps = 0 AND 
                       person_id IN {cohort}
                 GROUP BY person_id, date, minute_interval
@@ -40,7 +40,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     heart_rate_value,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM {dataset}.heart_rate_minute_level
+                FROM heart_rate_minute_level
                 WHERE person_id IN {cohort}
             )
             SELECT s.person_id, 
@@ -60,7 +60,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     IF(COUNT(*)=10,1,0) AS valid_interval,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM {dataset}.steps_intraday
+                FROM steps_intraday
                 WHERE steps = 0
                 GROUP BY person_id, date, minute_interval
                 HAVING valid_interval = 1
@@ -71,7 +71,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     heart_rate_value,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM {dataset}.heart_rate_minute_level
+                FROM heart_rate_minute_level
             )
             SELECT s.person_id, 
                    s.date,
