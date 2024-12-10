@@ -24,7 +24,7 @@ hourly_min_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,after
             SELECT person_id, 
                     CAST(datetime AS DATE) AS date,
                     EXTRACT(HOUR FROM datetime) as hour,
-                    MIN(heart_rate_value) AS min_heart_rate, 
+                    APPROX_QUANTILES(heart_rate_value, 100)[OFFSET(2)] AS min_heart_rate, 
             FROM heart_rate_minute_level 
             GROUP BY CAST(datetime AS DATE), EXTRACT(HOUR FROM datetime), person_id
     ") 
@@ -35,7 +35,7 @@ hourly_min_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,after
             SELECT person_id, 
                     CAST(datetime AS DATE) AS date,
                     EXTRACT(HOUR FROM datetime) as hour,
-                    MIN(heart_rate_value) AS min_heart_rate, 
+                    APPROX_QUANTILES(heart_rate_value, 100)[OFFSET(2)] AS min_heart_rate, 
             FROM heart_rate_minute_level 
             WHERE person_id IN {cohort}  
             GROUP BY CAST(datetime AS DATE), EXTRACT(HOUR FROM datetime), person_id
