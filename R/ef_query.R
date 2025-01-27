@@ -21,7 +21,6 @@ ef_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
             measurement.person_id,
             measurement.measurement_date,
             measurement.value_as_number as ef,
-            m_unit.concept_name as unit_concept_name
         FROM
             ( SELECT
                 *
