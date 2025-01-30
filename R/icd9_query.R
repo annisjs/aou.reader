@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' icd9_dat <- icd9_codes(c("410","410.%"))
+#' icd9_dat <- icd9_query(c("410","410.%"))
 #' }
 #' @export
 icd9_query <- function(icd9_codes=NULL,anchor_date_table=NULL,before=NULL,after=NULL)

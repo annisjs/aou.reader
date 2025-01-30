@@ -11,5 +11,5 @@ devtools::install_github("annisjs/aou.reader",upgrade=F)
 # Example
 ```r
 library(aou.reader)
-icd9_dat <- icd9_codes(c("410","410.%"))
-icd10_dat <- icd10_codes(c("I21","I21.%"))
+icd9_dat <- icd9_query(c("410","410.%"))
+icd10_dat <- icd10_query(c("I21","I21.%"))
