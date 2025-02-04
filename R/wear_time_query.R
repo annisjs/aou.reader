@@ -25,7 +25,7 @@ wear_time_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                     GROUP BY CAST(datetime AS DATE), EXTRACT(HOUR FROM datetime), person_id) t
             GROUP BY date, person_id
     ")
-    result_all <- download_big_data(query,dest)
+    result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"date",anchor_date_table,before,after)
     return(result_all)
 }

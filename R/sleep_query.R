@@ -35,7 +35,7 @@ sleep_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 			, sleep_daily_summary.minute_wake
 			FROM
 				`sleep_daily_summary` sleep_daily_summary", sep="")
-	result_all <- download_big_data(query,dest)
+	result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"sleep_date",anchor_date_table,before,after)
     return(result_all)
 }
