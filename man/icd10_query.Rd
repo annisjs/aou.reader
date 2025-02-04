@@ -29,6 +29,6 @@ ICD10 Query
 }
 \examples{
 \dontrun{
-icd10_dat <- icd10_codes(c("I21","I21.\%"))
+icd10_dat <- icd10_query(c("I21","I21.\%"))
 }
 }

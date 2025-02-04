@@ -9,9 +9,12 @@
 #' a data.table with the following columns:
 #' person_id, date, steps, fairly_active_minutes, lightly_active_minutes, sedentary_minutes, very_active_minutes
 #' 
+#' Since the fitbit data is very large in AoU, we keep the original file shards and do not convert to a single CSV. 
+#' The output shards can be found in the fitbit_query.csv folder.
+#' 
 #' @examples 
 #' /dontrun{
-#' bmi_dat <- bmi_query()
+#' fitbit_dat <- fitbit_query()
 #' }
 #' @export
 fitbit_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)

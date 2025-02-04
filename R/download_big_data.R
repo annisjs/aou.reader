@@ -32,7 +32,7 @@
 download_big_data <- function(query,dest,rm_csv=TRUE)
 {
     bucket <- Sys.getenv("WORKSPACE_BUCKET")
-    output_folder <- stringr::str_glue("{bucket}/aou_reader/")
+    output_folder <- stringr::str_glue("{bucket}/{dest}/")
     dest <- paste0(output_folder,gsub(".csv","_*.csv",dest))
     bq_table <- bigrquery::bq_dataset_query(Sys.getenv("WORKSPACE_CDR"), query, billing = Sys.getenv("GOOGLE_PROJECT"))
     bigrquery::bq_table_save(bq_table, dest, destination_format = "CSV")
