@@ -28,7 +28,7 @@ fitbit_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                 activity_summary.very_active_minutes
             FROM
                 `activity_summary` activity_summary", sep="")
-    result_all <- download_big_data(query,dest)
+    result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"date",anchor_date_table,before,after)
     return(result_all)
 }
