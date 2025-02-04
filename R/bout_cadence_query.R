@@ -21,7 +21,7 @@
 bout_cadence_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
   	dest <- "bout_cadence_query_result.csv"
-	query <- str_glue("
+	query <- stringr::str_glue("
 			SELECT person_id,
 				CAST(datetime AS DATE) as bout_cadence_date,
 				AVG(steps) as bout_cadence_value
