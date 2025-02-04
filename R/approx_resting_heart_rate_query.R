@@ -83,7 +83,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
             GROUP BY s.person_id, s.date"
         )
     }
-    result_all <- download_big_data(query,dest)
+    result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"date",anchor_date_table,before,after)
     return(result_all)
 }
