@@ -42,7 +42,7 @@ sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
         )
         GROUP BY person_id, sdann_date
     ")
-    result_all <- download_big_data(query,dest)
+    result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"sdann_date",anchor_date_table,before,after)
     return(result_all)
 }
