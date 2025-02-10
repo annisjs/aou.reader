@@ -58,7 +58,7 @@ sleep_level_query <- function(sleep_terms,time="first",anchor_date_table=NULL,be
                 {sleep_terms}) as t1
         WHERE rn = 1")
     }
-    result_all <- download_big_data(query,dest)
+    result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"sleep_date",anchor_date_table,before,after)
     return(result_all)
 }
