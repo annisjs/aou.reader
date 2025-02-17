@@ -30,7 +30,7 @@ sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                 person_id,
                 CAST(datetime AS DATE) AS sdann_date,
                 6000 / AVG(heart_rate_value) AS avg_rr,
-                IF(COUNT(*)=5,1,0) AS valid_interval
+                IF(COUNT(*)>=5,1,0) AS valid_interval
             FROM (SELECT person_id,
                         datetime,
                         heart_rate_value,
