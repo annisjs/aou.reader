@@ -29,7 +29,7 @@ bout_cadence_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 						lag (datetime) over (partition by person_id, CAST(datetime AS DATE) order by datetime) as nextTimestamp_lag,
 						lead (datetime) over (partition by person_id, CAST(datetime AS DATE) order by datetime) as nextTimestamp_lead
 				from steps_intraday
-				where steps >= 60
+				where steps >= 60 AND steps <= 250
 				) t
 			WHERE
 			(DATE_DIFF(datetime,nextTimestamp_lag,minute) <= 1 OR
