@@ -20,8 +20,11 @@ medical_encounter_query <- function(time="first",anchor_date_table=NULL,before=N
         ordering <- "MIN"
     } else if (time == "last") {
         ordering <- "MAX" 
+    } else if (time == "all")
+      {
+        ordering <- ""
     } else {
-        stop("time must be 'first' or 'last' ")
+        stop("time must be 'first' or 'last' or 'all'")
     }
     dest <- "first_medical_encounter_query_result.csv"
     query <- stringr::str_glue("
