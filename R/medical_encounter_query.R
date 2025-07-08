@@ -113,7 +113,7 @@ medical_encounter_query <- function(time="first",anchor_date_table=NULL,before=N
             FROM ehr
             ")
     }
-  result_all <- download_big_data(query,dest)
+  result_all <- download_big_data(query,dest, time != "all")
   if (time == "count"){
     result_all = result_all[, .(count_of_medical_encounter = .N), .(person_id)]
   }
