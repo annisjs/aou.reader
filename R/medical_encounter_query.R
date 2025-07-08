@@ -16,18 +16,23 @@
 #' @export
 medical_encounter_query <- function(time="first",anchor_date_table=NULL,before=NULL,after=NULL)
 {
-    if (time == "first") {
-        ordering <- "MIN"
-    } else if (time == "last") {
-        ordering <- "MAX" 
-    } else if (time == "all")
-      {
-        ordering <- ""
-    } else {
-        stop("time must be 'first' or 'last' or 'all'")
-    }
-    dest <- "first_medical_encounter_query_result.csv"
-    query <- stringr::str_glue("
+  if (time == "first") {
+    ordering <- "MIN"
+    date_group <- ""
+  } else if (time == "last") {
+    ordering <- "MAX"
+    date_group <- ""
+  } else if (time == "count") {
+    ordering <- "COUNT"
+    date_group <- ""
+  } else if (time == "all") {
+    ordering <- "MIN"
+    date_group <- ",date"
+  } else {
+    stop("time must be 'first', 'last', 'count' or 'all'")
+  }
+  dest <- stringr::str_glue("{time}_medical_encounter_query_result.csv")
+  query <- stringr::str_glue("
     WITH ehr AS (
     SELECT person_id, {ordering}(m.measurement_date) AS date
     FROM `measurement` AS m
@@ -66,11 +71,11 @@ medical_encounter_query <- function(time="first",anchor_date_table=NULL,before=N
     GROUP BY person_id
     )
 
-    SELECT person_id, {ordering}(date) as medical_encounter_entry_date
+    SELECT person_id, {ordering}(date) as {time}_medical_encounter_entry_date
     FROM ehr
-    GROUP BY person_id
+    GROUP BY person_id {date_group}
     ")
-    result_all <- download_big_data(query,dest)
-    result_all <- window_data(result_all,"medical_encounter_entry_date",anchor_date_table,before,after)
-    return(result_all)
+  result_all <- download_big_data(query,dest)
+  result_all <- window_data(result_all,"medical_encounter_entry_date",anchor_date_table,before,after)
+  return(result_all)
 }
