@@ -35,7 +35,8 @@ icd10_query <- function(icd10_codes=NULL,anchor_date_table=NULL,before=NULL,afte
     query <- stringr::str_glue("
           SELECT DISTINCT co.person_id,
             MIN(co.condition_start_date) AS condition_start_date,
-            co.condition_source_value AS condition_source_value
+            co.condition_source_value AS condition_source_value,
+            COUNT(DISTINCT co.condition_start_date) AS code_count
         FROM
             condition_occurrence co
             INNER JOIN
