@@ -12,7 +12,6 @@
 #' /dontrun{
 #' dat <- cadence_pattern()
 #' }
-#' @export
 #' @details Non-movement (minutes/day) = 0 steps/min but has heart rate data for that minute
 #' Incidental movement (minutes/day) = 1-19 steps/min *
 #' Sporadic movement(minutes/day) = 20-39 steps/min
