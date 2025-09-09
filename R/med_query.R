@@ -13,11 +13,8 @@
 #' med_dat <- med_query(c("roflumilast","daliresp"))
 #' }
 #' @export
-med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL, cohort=NULL)
+med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  if (is.null(meds) && is.null(cohort)){
-    stop("Both meds and cohort cannot be null!")
-  }
   dest <- "med_query_result.csv"
   if (!is.null(meds)){
     med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
@@ -32,8 +29,6 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL, c
         {med_terms}
     ")
   }else{
-    cohort <- paste(cohort, collapse = ",")
-    cohort <- paste0("(", cohort, ")")
     query <- stringr::str_glue("
        SELECT DISTINCT d.person_id, d.drug_exposure_start_date, c.concept_name as drug_name
         FROM
@@ -41,7 +36,6 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL, c
         INNER JOIN
         concept c
         ON (d.drug_concept_id = c.concept_id)
-        WHERE person_id IN {cohort}
     ")
   }
   
