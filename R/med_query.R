@@ -39,7 +39,7 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
     ")
   }
   
-  result_all <- download_big_data(query,dest)
+  result_all <- download_big_data(query,dest, !is.null(meds))
   result_all <- window_data(result_all,"drug_exposure_start_date",anchor_date_table,before,after)
   return(result_all)
 }
