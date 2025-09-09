@@ -4,7 +4,13 @@
 \alias{med_query}
 \title{Medication query}
 \usage{
-med_query(meds, anchor_date_table = NULL, before = NULL, after = NULL)
+med_query(
+  meds = NULL,
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  cohort = NULL
+)
 }
 \arguments{
 \item{meds}{a character vector or string containing medication names}

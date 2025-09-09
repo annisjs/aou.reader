@@ -13,11 +13,15 @@
 #' med_dat <- med_query(c("roflumilast","daliresp"))
 #' }
 #' @export
-med_query <- function(meds,anchor_date_table=NULL,before=NULL,after=NULL)
+med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL, cohort=NULL)
 {
+  if (is.null(meds) && is.null(cohort)){
+    stop("Both meds and cohort cannot be null!")
+  }
   dest <- "med_query_result.csv"
-  med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
-  query <- stringr::str_glue("
+  if (!is.null(meds)){
+    med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
+    query <- stringr::str_glue("
        SELECT DISTINCT d.person_id,d.drug_exposure_start_date
         FROM
         drug_exposure d
@@ -27,6 +31,20 @@ med_query <- function(meds,anchor_date_table=NULL,before=NULL,after=NULL)
         WHERE
         {med_terms}
     ")
+  }else{
+    cohort <- paste(cohort, collapse = ",")
+    cohort <- paste0("(", cohort, ")")
+    query <- stringr::str_glue("
+       SELECT DISTINCT d.person_id, d.drug_exposure_start_date, c.concept_name as drug_name
+        FROM
+        drug_exposure d
+        INNER JOIN
+        concept c
+        ON (d.drug_concept_id = c.concept_id)
+        WHERE person_id IN {cohort}
+    ")
+  }
+  
   result_all <- download_big_data(query,dest)
   result_all <- window_data(result_all,"drug_exposure_start_date",anchor_date_table,before,after)
   return(result_all)
