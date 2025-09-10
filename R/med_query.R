@@ -22,7 +22,7 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
     med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
   }
   query <- stringr::str_glue("
-       SELECT DISTINCT d.person_id,d.drug_exposure_start_date
+       SELECT DISTINCT d.person_id,d.drug_exposure_start_date, c.concept name AS drug_name
         FROM
         drug_exposure d
         INNER JOIN
@@ -33,6 +33,9 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
   ")
   
   result_all <- download_big_data(query, dest, rm_csv = !is.null(meds))
+  if (!is.null(meds)){
+    result_all$drug_name = NULL
+  }
   result_all <- window_data(result_all,"drug_exposure_start_date",anchor_date_table,before,after)
   return(result_all)
 }
