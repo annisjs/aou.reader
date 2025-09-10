@@ -23,7 +23,7 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
     dest <- "med_query_result.csv"
   }
   query <- stringr::str_glue("
-       SELECT DISTINCT d.person_id,d.drug_exposure_start_date, c.concept name AS drug_name
+       SELECT DISTINCT d.person_id,d.drug_exposure_start_date, c.concept_name AS drug_name
         FROM
         drug_exposure d
         INNER JOIN
