@@ -15,11 +15,12 @@
 #' @export
 med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
 {
-  dest <- "med_query_result.csv"
   if (is.null(meds)){
     med_terms <- "1=1"
+    dest <- "all_med_query_result.csv"
   }else{
     med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
+    dest <- "med_query_result.csv"
   }
   query <- stringr::str_glue("
        SELECT DISTINCT d.person_id,d.drug_exposure_start_date, c.concept name AS drug_name
