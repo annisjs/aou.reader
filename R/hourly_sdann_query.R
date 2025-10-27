@@ -17,9 +17,14 @@
 #' The average HR is used to calculate the average RR duration of each five-minute interval:
 #' Average RR = 6000 / mean(HR)
 #' Subsequently, the standard deviation of all the five-minute RR intervals is calculated, yielding the SDANN value (in ms).
-hourly_sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
+hourly_sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL, cohort=NULL)
 {
     dest <- "hourly_sdann_query_result.csv"
+    if (is.null(cohort)){
+        stop("Cohort is required.")
+    }
+    cohort <- paste(cohort, collapse = ",")
+    cohort <- paste0("(", cohort, ")")
     query <- stringr::str_glue(
         "
         SELECT person_id,
@@ -38,6 +43,7 @@ hourly_sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                         heart_rate_value,
                         FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 5) AS minute_interval
                 FROM heart_rate_minute_level
+                WHERE person_id IN {cohort}
             )
             GROUP BY person_id, sdann_date, minute_interval, sdann_hour
             HAVING valid_interval = 1
