@@ -4,7 +4,12 @@
 \alias{bout_cadence_query}
 \title{Bout cadence query}
 \usage{
-bout_cadence_query(anchor_date_table = NULL, before = NULL, after = NULL)
+bout_cadence_query(
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  min_steps = 60
+)
 }
 \arguments{
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
@@ -12,6 +17,8 @@ bout_cadence_query(anchor_date_table = NULL, before = NULL, after = NULL)
 \item{before}{an integer greater than or equal to 0. Dates prior to anchor_date + before will be excluded.}
 
 \item{after}{an integer greater than or equal to 0. Dates after anchor_date + after will be excluded.}
+
+\item{min_steps}{a numeric value indicating the minimum number of steps per minute to be included in a bout. Default is 60.}
 }
 \value{
 a data.table with the following columns:
@@ -21,7 +28,7 @@ person_id, bout_cadence_date, bout_cadence_value
 Bout cadence query
 }
 \details{
-Bout cadence is the average steps per minute when the step count >/= 60 steps a minute for at least 2 minutes.
+Bout cadence is the average steps per minute when the step count >/= \code{min_steps} steps a minute for at least 2 minutes.
 The wearer will usually have many of these “bouts” throughout the day.
 We take the average over the entire day to get the average bout cadence.
 }
