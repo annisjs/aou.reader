@@ -4,7 +4,12 @@
 \alias{hourly_sdann_query}
 \title{Hourly SDANN query}
 \usage{
-hourly_sdann_query(anchor_date_table = NULL, before = NULL, after = NULL)
+hourly_sdann_query(
+  anchor_date_table = NULL,
+  before = NULL,
+  after = NULL,
+  cohort = NULL
+)
 }
 \arguments{
 \item{anchor_date_table}{a data.frame containing two columns: person_id, anchor_date. A time window can be defined around the anchor date using the \code{before} and \code{after} arguments.}
