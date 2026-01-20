@@ -20,8 +20,10 @@
 #' Medium walking (minutes/day) = 80-99 steps/min
 #' Brisk walking (minutes/day) = 100-119 steps/min
 #' All faster ambulation (minutes/day) = 120+ steps/min
+#' @export
 cadence_pattern_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
+    warning("This query can be expensive to run. Use with caution.")
     dest <- "cadence_pattern_query_result.csv"
     query <- "
         WITH sleep_table AS (
