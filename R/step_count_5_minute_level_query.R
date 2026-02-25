@@ -18,14 +18,14 @@ step_count_average_5_minute_interval_query <- function()
             "
             SELECT person_id,
                 minute_interval,
-                AVG(steps_sum) AS average_step_count
+                AVG(steps_sum) AS average_step_count,
                 AVG(has_steps) AS p_has_steps
             FROM (SELECT
                     person_id,
                     CAST(datetime AS DATE) AS date,
                     minute_interval,
                     SUM(steps) AS steps_sum,
-                    IF(SUM(steps) > 0, 1, 0) as has_steps
+                    IF(SUM(steps) > 0, 1, 0) as has_steps,
                     IF(COUNT(*)>=5,1,0) AS valid_interval
                 FROM (SELECT person_id,
                             datetime,
