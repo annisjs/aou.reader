@@ -8,7 +8,8 @@ step_count_average_5_minute_interval_query()
 }
 \value{
 a data.table with the following columns:
-person_id, date, minute_interval, average_step_count
+person_id, minute_interval, average_step_count, p_has_steps
+p is the probability of the interval having > 0 steps.
 }
 \description{
 Average step count over all 5-minute-intervals query
