@@ -16,10 +16,11 @@
 med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
 {
   if (is.null(meds)){
-    med_terms <- "1=1"
+    med_terms <- ""
     dest <- "all_med_query_result.csv"
   }else{
     med_terms <- paste('lower(c.concept_name) LIKE ',"'%",meds,"%'",collapse=' OR ',sep="")
+    med_terms <- paste("WHERE", med_terms)
     dest <- "med_query_result.csv"
   }
   query <- stringr::str_glue("
@@ -29,14 +30,9 @@ med_query <- function(meds=NULL,anchor_date_table=NULL,before=NULL,after=NULL)
         INNER JOIN
         concept c
         ON (d.drug_concept_id = c.concept_id)
-        WHERE
         {med_terms}
   ")
-  
   result_all <- download_big_data(query, dest, rm_csv = !is.null(meds))
-  if (!is.null(meds)){
-    result_all$drug_name = NULL
-  }
   result_all <- window_data(result_all,"drug_exposure_start_date",anchor_date_table,before,after)
   return(result_all)
 }
