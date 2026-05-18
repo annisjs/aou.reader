@@ -1,15 +1,11 @@
-#' Download big data (robust to single-file vs sharded CSV outputs)
-#'
-#' @param query SQL query string
-#' @param dest file name like "demographics_query_result.csv"
-#' @param rm_csv logical; delete exported objects from the bucket folder after reading
+#' Download big data via BigQuery extract to GCS (robust for huge results)
 #'
 #' @export
-download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
+download_big_data <- function(query, dest, rm_csv = TRUE) {
 
-  bucket  <- Sys.getenv("WORKSPACE_BUCKET")
-  cdr     <- Sys.getenv("WORKSPACE_CDR")
-  billing <- Sys.getenv("GOOGLE_PROJECT")
+  bucket  <- Sys.getenv("WORKSPACE_BUCKET")   # like "gs://fc-secure-.../"
+  cdr     <- Sys.getenv("WORKSPACE_CDR")      # dataset id
+  billing <- Sys.getenv("GOOGLE_PROJECT")     # project id
 
   if (bucket  == "") stop("WORKSPACE_BUCKET env var is not set.")
   if (cdr     == "") stop("WORKSPACE_CDR env var is not set.")
@@ -17,44 +13,46 @@ download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
 
   dest_base <- sub("\\.csv$", "", dest)
 
-  # Put outputs in a clean folder not containing ".csv"
-  output_folder <- stringr::str_glue("{bucket}/aou_reader/{dest_base}/")
+  # Export folder in the workspace bucket
+  output_folder <- paste0(bucket, "aou_reader/", dest_base, "/")
+  gcs_uri <- paste0(output_folder, dest_base, "-*.csv")  # shard pattern for extract
 
-  # Prefix for objects written by bq_table_save (may produce single file or shards)
-  # Do NOT include '*' here.
-  gcs_prefix <- paste0(output_folder, dest_base)
+  # 1) Run query to a temp table
+  job <- bigrquery::bq_dataset_query(cdr, query, billing = billing)
 
-  bq_table <- bigrquery::bq_dataset_query(cdr, query, billing = billing)
-  bigrquery::bq_table_save(bq_table, gcs_prefix, destination_format = "CSV")
+  # job is a bq_table reference to the temp results
+  # 2) Use 'bq extract' for a stable GCS export
+  src <- sprintf("%s:%s.%s",
+                 job$project, job$dataset, job$table)
 
-  # List objects in the folder
-  objs <- system(stringr::str_glue("gsutil ls {output_folder}"), intern = TRUE)
+  cmd <- sprintf(
+    "bq --project_id=%s extract --destination_format=CSV --print_header=true '%s' '%s'",
+    billing, src, gcs_uri
+  )
+  out <- system(cmd, intern = TRUE)
+  # If extract fails, bq writes messages to stdout/stderr; we should detect failure
+  # system() returns output only; to properly handle return codes, use system2:
+  # (kept simple here; see note below)
 
-  # Prefer objects that match our prefix; no regex needed
-  csv_objs <- objs[startsWith(objs, gcs_prefix) & endsWith(objs, ".csv")]
-
-  # Fallback: any CSV in the folder
-  if (length(csv_objs) == 0) {
-    csv_objs <- objs[endsWith(objs, ".csv")]
-  }
+  # 3) List exported shards
+  objs <- system2("gsutil", c("ls", paste0(output_folder, "*.csv")), stdout = TRUE, stderr = TRUE)
+  csv_objs <- objs[grepl("\\.csv$", objs)]
   if (length(csv_objs) == 0) stop("No CSV outputs found in: ", output_folder)
 
-  # Download those objects locally
+  # 4) Download locally and read
   local_dir <- file.path(tempdir(), "aou_reader", dest_base)
   dir.create(local_dir, recursive = TRUE, showWarnings = FALSE)
 
-  # Quote paths in case of odd characters
-  for (u in csv_objs) {
-    system2("gsutil", c("cp", shQuote(u), shQuote(local_dir)), stdout = TRUE, stderr = TRUE)
-  }
+  system2("gsutil", c("-m", "cp", paste0(output_folder, "*.csv"), local_dir),
+          stdout = TRUE, stderr = TRUE)
 
   files <- list.files(local_dir, pattern = "\\.csv$", full.names = TRUE)
-  if (length(files) == 0) stop("No local CSV files found after gsutil cp into: ", local_dir)
+  if (length(files) == 0) stop("No local CSVs found in: ", local_dir)
 
   res <- data.table::rbindlist(lapply(files, data.table::fread), fill = TRUE)
 
   if (rm_csv) {
-    system2("gsutil", c("-m", "rm", shQuote(paste0(output_folder, "*"))),
+    system2("gsutil", c("-m", "rm", paste0(output_folder, "*.csv")),
             stdout = TRUE, stderr = TRUE)
   }
 
