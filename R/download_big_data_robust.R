@@ -2,7 +2,6 @@
 #'
 #' @export
 download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
-
   bucket  <- Sys.getenv("WORKSPACE_BUCKET")
   cdr     <- Sys.getenv("WORKSPACE_CDR")
   billing <- Sys.getenv("GOOGLE_PROJECT")
@@ -11,13 +10,14 @@ download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
   if (cdr     == "") stop("WORKSPACE_CDR env var is not set.")
   if (billing == "") stop("GOOGLE_PROJECT env var is not set.")
 
+  # FIX: ensure WORKSPACE_BUCKET ends with exactly one "/"
+  bucket <- sub("/?$", "/", bucket)
+
   dest_base <- sub("\\.csv$", "", dest)
 
   output_folder <- paste0(bucket, "aou_reader/", dest_base, "/")
-  # shard pattern for extract (fine to keep)
-  gcs_uri <- paste0(output_folder, dest_base, "-*.csv")
-  # prefix we expect outputs to start with
-  gcs_prefix <- paste0(output_folder, dest_base)
+  gcs_uri <- paste0(output_folder, dest_base, "-*.csv")   # shard pattern for extract
+  gcs_prefix <- paste0(output_folder, dest_base)          # prefix we expect outputs to start with
 
   # 1) Run query to a temp table
   job <- bigrquery::bq_dataset_query(cdr, query, billing = billing)
@@ -48,14 +48,10 @@ download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
   objs <- system2("gsutil", c("ls", output_folder), stdout = TRUE, stderr = TRUE)
   objs <- objs[nzchar(objs)]
 
-  # Prefer CSV shards if present
   out_objs <- objs[startsWith(objs, gcs_prefix) & endsWith(objs, ".csv")]
-
-  # Fallback: accept objects with no extension (e.g., .../dest_base)
   if (length(out_objs) == 0) {
-    out_objs <- objs[startsWith(objs, gcs_prefix)]
+    out_objs <- objs[startsWith(objs, gcs_prefix)]  # extensionless fallback
   }
-
   if (length(out_objs) == 0) stop("No outputs found in: ", output_folder)
 
   # 4) Download locally and read
@@ -72,7 +68,6 @@ download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
   res <- data.table::rbindlist(lapply(files, data.table::fread), fill = TRUE)
 
   if (rm_csv) {
-    # remove everything produced for this dest_base (csv shards + extensionless)
     system2("gsutil", c("-m", "rm", paste0(output_folder, "*")),
             stdout = TRUE, stderr = TRUE)
   }
