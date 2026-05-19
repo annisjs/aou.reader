@@ -1,7 +1,7 @@
 #' Download big data via BigQuery extract to GCS (robust for huge results)
 #'
 #' @export
-download_big_data <- function(query, dest, rm_csv = TRUE) {
+download_big_data_robust <- function(query, dest, rm_csv = TRUE) {
 
   bucket  <- Sys.getenv("WORKSPACE_BUCKET")
   cdr     <- Sys.getenv("WORKSPACE_CDR")

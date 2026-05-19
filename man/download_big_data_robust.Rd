@@ -2,20 +2,10 @@
 % Please edit documentation in R/download_big_data_robust.R
 \name{download_big_data_robust}
 \alias{download_big_data_robust}
-\title{Download big data}
+\title{Download big data via BigQuery extract to GCS (robust for huge results)}
 \usage{
 download_big_data_robust(query, dest, rm_csv = TRUE)
 }
-\arguments{
-\item{query}{SQL query string}
-
-\item{dest}{name of the csv file (e.g., "demographics_query_result.csv")}
-
-\item{rm_csv}{logical indicating whether to delete the csv after downloading. Default is TRUE.}
-}
-\value{
-A data.table corresponding to the query. If rm_csv is FALSE, files are left in the workspace bucket.
-}
 \description{
-Download big data
+Download big data via BigQuery extract to GCS (robust for huge results)
 }
