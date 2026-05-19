@@ -30,6 +30,7 @@ demographics_query <- function()
     LEFT JOIN
         `concept` p_sex_at_birth_concept
             ON person.sex_at_birth_concept_id = p_sex_at_birth_concept.concept_id", sep="")
-  result_all <- download_big_data(query,dest)
+  #result_all <- download_big_data(query,dest)
+  result_all <- download_big_data_robust(query,dest)
   return(result_all)
 }
