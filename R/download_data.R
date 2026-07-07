@@ -7,5 +7,5 @@
 #' @export
 download_data <- function(query,page_size=NULL) {
   tb <- bq_project_query(Sys.getenv('GOOGLE_PROJECT'), query)
-  as.data.table(bq_table_download(tb,page_size=page_size))
+  as.data.table(bq_table_download(tb, bigint = "integer64", page_size=page_size))
 }
