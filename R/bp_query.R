@@ -20,13 +20,17 @@ bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
         WITH diatb AS (SELECT
             person_id, measurement_datetime, value_as_number AS bp_diastolic
             FROM measurement m
+            INNER JOIN concept c ON (m.measurement_concept_id = c.concept_id)
         WHERE
-            m.measurement_source_value IN ('8462-4','8453-3', '271650006')),
+            c.concept_id IN (3004249, 4152194, 3018586, 4152194, 4232915, 3018586)
+            ),
         systb AS (SELECT
             person_id, measurement_datetime, value_as_number AS bp_systolic
             FROM measurement m
+            INNER JOIN concept c ON (m.measurement_concept_id = c.concept_id)
         WHERE
-            m.measurement_source_value IN ('8480-6','8459-0', '271649006'))
+            c.concept_id IN (3012888, 4154790, 3034703, 4154790, 4248524, 3034703)
+            )
         SELECT d.person_id,
                CAST(d.measurement_datetime AS DATE) AS measurement_date,
                bp_systolic,
