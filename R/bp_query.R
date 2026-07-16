@@ -22,14 +22,14 @@ bp_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
             FROM measurement m
             INNER JOIN concept c ON (m.measurement_concept_id = c.concept_id)
         WHERE
-            c.concept_id IN (3004249, 4152194, 3018586, 4152194, 4232915, 3018586)
+            c.concept_id IN (3012888, 4154790, 3034703, 4154790, 4248524, 3034703)
             ),
         systb AS (SELECT
             person_id, measurement_datetime, value_as_number AS bp_systolic
             FROM measurement m
             INNER JOIN concept c ON (m.measurement_concept_id = c.concept_id)
         WHERE
-            c.concept_id IN (3012888, 4154790, 3034703, 4154790, 4248524, 3034703)
+            c.concept_id IN (3004249, 4152194, 3018586, 4152194, 4232915, 3018586)
             )
         SELECT d.person_id,
                CAST(d.measurement_datetime AS DATE) AS measurement_date,
