@@ -40,7 +40,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     heart_rate_value,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM heart_rate_minute_level
+                FROM heart_rate_intraday
                 WHERE person_id IN {cohort}
             )
             SELECT s.person_id, 
@@ -71,7 +71,7 @@ approx_resting_heart_rate_query <- function(anchor_date_table=NULL,before=NULL,a
                     CAST(datetime AS DATE) AS date, 
                     heart_rate_value,
                     FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 10) AS minute_interval
-                FROM heart_rate_minute_level
+                FROM heart_rate_intraday
             )
             SELECT s.person_id, 
                    s.date,
