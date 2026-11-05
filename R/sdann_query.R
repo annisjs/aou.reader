@@ -44,7 +44,7 @@ sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
                         EXTRACT(MINUTE FROM datetime)
                     ) / 5
                 ) AS minute_interval
-            FROM heart_rate_minute_level
+            FROM heart_rate_intraday
         )
         GROUP BY
             person_id,
