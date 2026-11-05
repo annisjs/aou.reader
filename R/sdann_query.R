@@ -21,26 +21,40 @@ sdann_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
     dest <- "sdann_query_result.csv"
     query <- stringr::str_glue(
-        "
-        SELECT person_id,
-            sdann_date,
-            STDDEV(avg_rr) AS sdann_value,
-            SUM(valid_interval) AS sdann_total_valid_interval
-        FROM (SELECT
+    "
+    SELECT
+        person_id,
+        sdann_date,
+        STDDEV(avg_rr) AS sdann_value,
+        COUNT(*) AS sdann_total_valid_interval
+    FROM (
+        SELECT
+            person_id,
+            CAST(datetime AS DATE) AS sdann_date,
+            minute_interval,
+            AVG(60000.0 / heart_rate_value) AS avg_rr
+        FROM (
+            SELECT
                 person_id,
-                CAST(datetime AS DATE) AS sdann_date,
-                6000 / AVG(heart_rate_value) AS avg_rr,
-                IF(COUNT(*)>=5,1,0) AS valid_interval
-            FROM (SELECT person_id,
-                        datetime,
-                        heart_rate_value,
-                        FLOOR((EXTRACT(MINUTE FROM datetime) + 60 * EXTRACT(HOUR FROM datetime)) / 5) AS minute_interval
-                FROM heart_rate_minute_level
-            )
-            GROUP BY person_id, sdann_date, minute_interval
-            HAVING valid_interval = 1
+                datetime,
+                heart_rate_value,
+                FLOOR(
+                    (
+                        EXTRACT(HOUR FROM datetime) * 60 +
+                        EXTRACT(MINUTE FROM datetime)
+                    ) / 5
+                ) AS minute_interval
+            FROM heart_rate_minute_level
         )
-        GROUP BY person_id, sdann_date
+        GROUP BY
+            person_id,
+            CAST(datetime AS DATE),
+            minute_interval
+        HAVING COUNT(*) >= 5
+    )
+    GROUP BY
+        person_id,
+        sdann_date
     ")
     result_all <- download_big_data(query,dest,FALSE)
     result_all <- window_data(result_all,"sdann_date",anchor_date_table,before,after)
