@@ -17,7 +17,7 @@
 primary_consent_date_query <- function(anchor_date_table=NULL,before=NULL,after=NULL)
 {
     dest <- "primary_consent_date_query_result.csv"
-    query = str_glue("
+    query = stringr:;str_glue("
         SELECT DISTINCT
             person_id,
             MIN(observation_date) AS primary_consent_date
