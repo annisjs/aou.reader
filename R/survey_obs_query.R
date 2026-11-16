@@ -26,7 +26,7 @@ survey_obs_query <- function(survey_codes,anchor_date_table=NULL,before=NULL,aft
     FROM observation o
     INNER JOIN concept c ON (o.observation_source_concept_id = c.concept_id)
     INNER JOIN concept c2 ON (o.value_as_concept_id = c2.concept_id)
-    WHERE c.concept_id IN {(survey_codes)}
+    WHERE c.concept_id IN ({survey_codes})
     "
     query <- stringr::str_glue(query)
     result_all <- download_big_data(query,dest)
